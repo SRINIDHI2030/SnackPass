@@ -1,1286 +1,900 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>SnackPass | Smart Campus Snack Ordering</title>
-
-    <style>
-        /* =========================
-           RESET & GLOBAL
-        ========================== */
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #ff6b00;
-            --primary-dark: #e85d00;
-            --primary-light: #fff3e8;
-
-            --dark: #171717;
-            --text: #303030;
-            --muted: #777;
-
-            --bg: #fafafa;
-            --white: #ffffff;
-            --border: #e8e8e8;
-
-            --success: #20a464;
-
-            --shadow: 0 10px 35px rgba(0,0,0,0.07);
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: Inter, Arial, Helvetica, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.5;
-        }
-
-        button,
-        input {
-            font: inherit;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        /* =========================
-           HEADER
-        ========================== */
-
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-
-            background: rgba(255,255,255,0.94);
-            backdrop-filter: blur(12px);
-
-            border-bottom: 1px solid var(--border);
-        }
-
-        .nav {
-            max-width: 1400px;
-            margin: auto;
-
-            min-height: 74px;
-            padding: 0 30px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 25px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            font-size: 25px;
-            font-weight: 800;
-            color: var(--dark);
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-
-            display: grid;
-            place-items: center;
-
-            border-radius: 12px;
-            background: var(--primary-light);
-
-            font-size: 23px;
-        }
-
-        .logo span {
-            color: var(--primary);
-        }
-
-        .nav-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .campus-badge {
-            padding: 8px 13px;
-            border-radius: 30px;
-
-            background: #f4f4f4;
-            color: #555;
-
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .nav-cart {
-            position: relative;
-
-            width: 45px;
-            height: 45px;
-
-            border: 0;
-            border-radius: 12px;
-
-            background: var(--primary);
-            color: white;
-
-            font-size: 20px;
-        }
-
-        .nav-cart-count {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-
-            width: 21px;
-            height: 21px;
-
-            display: grid;
-            place-items: center;
-
-            border-radius: 50%;
-
-            background: #111;
-            color: white;
-
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        /* =========================
-           HERO
-        ========================== */
-
-        .hero {
-            max-width: 1400px;
-            margin: auto;
-            padding: 55px 30px 35px;
-
-            display: grid;
-            grid-template-columns: 1.4fr 1fr;
-            gap: 40px;
-            align-items: center;
-        }
-
-        .hero-content h1 {
-            font-size: clamp(38px, 5vw, 68px);
-            line-height: 1.03;
-            letter-spacing: -2px;
-            color: var(--dark);
-            margin-bottom: 20px;
-        }
-
-        .hero-content h1 span {
-            color: var(--primary);
-        }
-
-        .hero-content p {
-            max-width: 650px;
-            color: var(--muted);
-            font-size: 18px;
-            margin-bottom: 28px;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .primary-btn,
-        .secondary-btn {
-            border: none;
-            padding: 13px 20px;
-            border-radius: 12px;
-
-            font-weight: 700;
-
-            transition: 0.25s ease;
-        }
-
-        .primary-btn {
-            background: var(--primary);
-            color: white;
-        }
-
-        .primary-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .secondary-btn {
-            background: white;
-            border: 1px solid var(--border);
-            color: var(--dark);
-        }
-
-        .secondary-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .hero-card {
-            min-height: 280px;
-
-            border-radius: 28px;
-
-            background:
-                radial-gradient(circle at 20% 20%, #ffd9bd, transparent 35%),
-                linear-gradient(135deg, #fff4e9, #ffe2cc);
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-size: 150px;
-
-            box-shadow: var(--shadow);
-        }
-
-        /* =========================
-           FEATURES
-        ========================== */
-
-        .features {
-            max-width: 1400px;
-            margin: auto;
-            padding: 15px 30px 35px;
-
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
-
-        .feature {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 18px;
-
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .feature-icon {
-            font-size: 26px;
-        }
-
-        .feature strong {
-            display: block;
-            color: var(--dark);
-        }
-
-        .feature small {
-            color: var(--muted);
-        }
-
-        /* =========================
-           MAIN LAYOUT
-        ========================== */
-
-        .main {
-            max-width: 1400px;
-            margin: auto;
-
-            padding: 30px;
-
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) 380px;
-            gap: 30px;
-            align-items: start;
-        }
-
-        .menu-section {
-            min-width: 0;
-        }
-
-        .section-heading {
-            display: flex;
-            justify-content: space-between;
-            align-items: end;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .section-heading h2 {
-            font-size: 30px;
-            color: var(--dark);
-        }
-
-        .section-heading p {
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        /* =========================
-           SEARCH
-        ========================== */
-
-        .search-box {
-            position: relative;
-            margin-bottom: 18px;
-        }
-
-        .search-box input {
-            width: 100%;
-
-            padding: 16px 18px 16px 48px;
-
-            border: 1px solid var(--border);
-            border-radius: 14px;
-
-            background: white;
-            outline: none;
-
-            transition: 0.2s;
-        }
-
-        .search-box input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(255,107,0,0.08);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 17px;
-            top: 50%;
-            transform: translateY(-50%);
-
-            color: #999;
-        }
-
-        /* =========================
-           CATEGORIES
-        ========================== */
-
-        .categories {
-            display: flex;
-            gap: 9px;
-            overflow-x: auto;
-            padding-bottom: 12px;
-            margin-bottom: 25px;
-
-            scrollbar-width: none;
-        }
-
-        .categories::-webkit-scrollbar {
-            display: none;
-        }
-
-        .category-btn {
-            flex-shrink: 0;
-
-            border: 1px solid var(--border);
-            background: white;
-
-            padding: 9px 15px;
-
-            border-radius: 30px;
-
-            font-size: 13px;
-            font-weight: 600;
-
-            color: #555;
-
-            transition: 0.2s;
-        }
-
-        .category-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .category-btn.active {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-
-        /* =========================
-           PRODUCT GRID
-        ========================== */
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 18px;
-        }
-
-        .product {
-            background: white;
-
-            border: 1px solid var(--border);
-            border-radius: 18px;
-
-            overflow: hidden;
-
-            transition: 0.25s ease;
-
-            animation: fadeUp 0.4s ease both;
-        }
-
-        .product:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow);
-        }
-
-        .product-image {
-            height: 155px;
-
-            display: grid;
-            place-items: center;
-
-            background: linear-gradient(135deg, #fff5ec, #fffaf7);
-
-            font-size: 72px;
-        }
-
-        .product-body {
-            padding: 16px;
-        }
-
-        .product-category {
-            color: var(--primary);
-            font-size: 11px;
-            font-weight: 800;
-
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-        }
-
-        .product-name {
-            margin: 5px 0;
-
-            color: var(--dark);
-            font-size: 17px;
-            font-weight: 750;
-        }
-
-        .product-description {
-            color: var(--muted);
-            font-size: 12px;
-
-            min-height: 36px;
-        }
-
-        .product-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            margin-top: 13px;
-        }
-
-        .price {
-            color: var(--dark);
-            font-size: 17px;
-            font-weight: 800;
-        }
-
-        .add-btn {
-            border: none;
-
-            width: 36px;
-            height: 36px;
-
-            border-radius: 10px;
-
-            background: var(--primary);
-            color: white;
-
-            font-size: 21px;
-            font-weight: 600;
-
-            transition: 0.2s;
-        }
-
-        .add-btn:hover {
-            transform: scale(1.08);
-            background: var(--primary-dark);
-        }
-
-        /* =========================
-           CART
-        ========================== */
-
-        .cart {
-            position: sticky;
-            top: 94px;
-
-            background: white;
-
-            border: 1px solid var(--border);
-            border-radius: 20px;
-
-            box-shadow: var(--shadow);
-
-            overflow: hidden;
-        }
-
-        .cart-header {
-            padding: 20px;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            border-bottom: 1px solid var(--border);
-        }
-
-        .cart-header h3 {
-            color: var(--dark);
-            font-size: 20px;
-        }
-
-        .cart-count-label {
-            background: var(--primary-light);
-            color: var(--primary);
-
-            padding: 5px 9px;
-
-            border-radius: 20px;
-
-            font-size: 12px;
-            font-weight: 800;
-        }
-
-        .cart-items {
-            max-height: 430px;
-            overflow-y: auto;
-        }
-
-        .empty-cart {
-            padding: 45px 20px;
-            text-align: center;
-            color: #999;
-        }
-
-        .empty-cart-icon {
-            font-size: 50px;
-            margin-bottom: 12px;
-        }
-
-        .cart-item {
-            padding: 15px 18px;
-
-            display: grid;
-            grid-template-columns: 45px 1fr auto;
-            gap: 10px;
-
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .cart-item-icon {
-            width: 45px;
-            height: 45px;
-
-            display: grid;
-            place-items: center;
-
-            border-radius: 10px;
-
-            background: var(--primary-light);
-
-            font-size: 25px;
-        }
-
-        .cart-item-name {
-            font-size: 13px;
-            font-weight: 750;
-            color: var(--dark);
-        }
-
-        .cart-item-price {
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-
-            margin-top: 7px;
-        }
-
-        .quantity-controls button {
-            width: 25px;
-            height: 25px;
-
-            border: 1px solid var(--border);
-            border-radius: 7px;
-
-            background: white;
-
-            font-weight: 800;
-        }
-
-        .quantity-controls button:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .quantity {
-            min-width: 15px;
-            text-align: center;
-
-            font-size: 12px;
-            font-weight: 800;
-        }
-
-        .remove-btn {
-            border: none;
-            background: transparent;
-
-            color: #aaa;
-
-            font-size: 14px;
-        }
-
-        .remove-btn:hover {
-            color: #e33;
-        }
-
-        /* =========================
-           CART TOTAL
-        ========================== */
-
-        .cart-summary {
-            padding: 18px;
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-
-            margin-bottom: 10px;
-
-            font-size: 14px;
-            color: #666;
-        }
-
-        .summary-row.total {
-            padding-top: 13px;
-            margin-top: 10px;
-
-            border-top: 1px dashed #ddd;
-
-            color: var(--dark);
-
-            font-size: 18px;
-            font-weight: 800;
-        }
-
-        .checkout-btn {
-            width: 100%;
-
-            border: none;
-
-            padding: 15px;
-
-            border-radius: 12px;
-
-            background: var(--primary);
-            color: white;
-
-            font-weight: 800;
-
-            margin-top: 10px;
-
-            transition: 0.2s;
-        }
-
-        .checkout-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .checkout-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* =========================
-           MOBILE CART BAR
-        ========================== */
-
-        .mobile-cart-bar {
-            display: none;
-
-            position: fixed;
-            left: 15px;
-            right: 15px;
-            bottom: 15px;
-
-            z-index: 900;
-
-            padding: 10px 13px;
-
-            background: #171717;
-            color: white;
-
-            border-radius: 15px;
-
-            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-        }
-
-        .mobile-cart-inner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-
-        .mobile-cart-info strong {
-            display: block;
-            font-size: 14px;
-        }
-
-        .mobile-cart-info small {
-            color: #bbb;
-        }
-
-        .mobile-cart-button {
-            border: none;
-            background: var(--primary);
-            color: white;
-
-            padding: 10px 15px;
-            border-radius: 10px;
-
-            font-weight: 750;
-        }
-
-        /* =========================
-           CHECKOUT MODAL
-        ========================== */
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-
-            z-index: 2000;
-
-            background: rgba(0,0,0,0.58);
-
-            display: none;
-            align-items: center;
-            justify-content: center;
-
-            padding: 20px;
-
-            animation: fadeIn 0.2s ease;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .checkout-modal {
-            width: min(600px, 100%);
-            max-height: 90vh;
-
-            overflow-y: auto;
-
-            background: white;
-
-            border-radius: 22px;
-
-            box-shadow: 0 25px 80px rgba(0,0,0,0.25);
-
-            animation: modalIn 0.3s ease;
-        }
-
-        .modal-header {
-            padding: 22px;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            border-bottom: 1px solid var(--border);
-        }
-
-        .modal-header h2 {
-            color: var(--dark);
-        }
-
-        .close-modal {
-            border: none;
-            background: #f4f4f4;
-
-            width: 35px;
-            height: 35px;
-
-            border-radius: 10px;
-
-            font-size: 18px;
-        }
-
-        .checkout-content {
-            padding: 22px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-
-            margin-bottom: 7px;
-
-            font-size: 13px;
-            font-weight: 750;
-            color: var(--dark);
-        }
-
-        .form-group input {
-            width: 100%;
-
-            padding: 13px 14px;
-
-            border: 1px solid var(--border);
-            border-radius: 11px;
-
-            outline: none;
-        }
-
-        .form-group input:focus {
-            border-color: var(--primary);
-        }
-
-        /* =========================
-           PAYMENT
-        ========================== */
-
-        .payment-title {
-            margin: 22px 0 12px;
-
-            color: var(--dark);
-            font-size: 17px;
-        }
-
-        .payment-option {
-            display: flex;
-            align-items: center;
-            gap: 13px;
-
-            padding: 14px;
-
-            margin-bottom: 9px;
-
-            border: 1px solid var(--border);
-            border-radius: 12px;
-
-            cursor: pointer;
-
-            transition: 0.2s;
-        }
-
-        .payment-option:hover {
-            border-color: var(--primary);
-            background: var(--primary-light);
-        }
-
-        .payment-option.selected {
-            border-color: var(--primary);
-            background: var(--primary-light);
-        }
-
-        .payment-option input {
-            accent-color: var(--primary);
-        }
-
-        .payment-icon {
-            width: 38px;
-            height: 38px;
-
-            display: grid;
-            place-items: center;
-
-            background: white;
-
-            border-radius: 9px;
-
-            font-size: 20px;
-        }
-
-        .payment-details strong {
-            display: block;
-            font-size: 14px;
-        }
-
-        .payment-details small {
-            color: var(--muted);
-            font-size: 11px;
-        }
-
-        .modal-total {
-            margin-top: 20px;
-            padding: 15px;
-
-            background: #f8f8f8;
-
-            border-radius: 12px;
-
-            display: flex;
-            justify-content: space-between;
-
-            font-weight: 800;
-        }
-
-        .confirm-btn {
-            width: 100%;
-
-            margin-top: 15px;
-
-            border: none;
-
-            padding: 15px;
-
-            border-radius: 12px;
-
-            background: var(--primary);
-            color: white;
-
-            font-weight: 800;
-        }
-
-        /* =========================
-           SUCCESS
-        ========================== */
-
-        .success-screen {
-            padding: 35px 25px;
-            text-align: center;
-        }
-
-        .success-icon {
-            width: 75px;
-            height: 75px;
-
-            display: grid;
-            place-items: center;
-
-            margin: 0 auto 18px;
-
-            border-radius: 50%;
-
-            background: #e8f8ef;
-            color: var(--success);
-
-            font-size: 40px;
-
-            animation: pop 0.5s ease;
-        }
-
-        .success-screen h2 {
-            color: var(--dark);
-            margin-bottom: 8px;
-        }
-
-        .success-screen p {
-            color: var(--muted);
-        }
-
-        .token-box {
-            margin: 22px 0;
-            padding: 18px;
-
-            border: 2px dashed var(--primary);
-
-            border-radius: 15px;
-
-            background: var(--primary-light);
-        }
-
-        .token-label {
-            display: block;
-
-            color: var(--muted);
-            font-size: 12px;
-
-            margin-bottom: 5px;
-        }
-
-        .token {
-            color: var(--primary);
-
-            font-size: 31px;
-            letter-spacing: 2px;
-
-            font-weight: 900;
-        }
-
-        .pickup-note {
-            padding: 13px;
-
-            background: #f5f5f5;
-            border-radius: 10px;
-
-            font-size: 13px;
-            color: #555;
-        }
-
-        /* =========================
-           FOOTER
-        ========================== */
-
-        footer {
-            margin-top: 50px;
-
-            padding: 40px 30px;
-
-            background: #171717;
-            color: white;
-
-            text-align: center;
-        }
-
-        footer h3 {
-            font-size: 22px;
-            margin-bottom: 7px;
-        }
-
-        footer span {
-            color: var(--primary);
-        }
-
-        footer p {
-            color: #999;
-            font-size: 13px;
-        }
-
-        /* =========================
-           ANIMATIONS
-        ========================== */
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes modalIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(0.97);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        @keyframes pop {
-            0% {
-                transform: scale(0.5);
-            }
-
-            70% {
-                transform: scale(1.1);
-            }
-
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        /* =========================
-           RESPONSIVE
-        ========================== */
-
-        @media (max-width: 1100px) {
-
-            .product-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .features {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .hero {
-                grid-template-columns: 1fr 0.8fr;
-            }
-        }
-
-        @media (max-width: 850px) {
-
-            .nav {
-                padding: 0 18px;
-            }
-
-            .campus-badge {
-                display: none;
-            }
-
-            .hero {
-                grid-template-columns: 1fr;
-                padding: 40px 18px 25px;
-            }
-
-            .hero-card {
-                min-height: 180px;
-                font-size: 100px;
-            }
-
-            .features {
-                padding: 10px 18px 25px;
-            }
-
-            .main {
-                display: block;
-                padding: 25px 18px 100px;
-            }
-
-            .cart {
-                display: none;
-            }
-
-            .mobile-cart-bar {
-                display: block;
-            }
-        }
-
-        @media (max-width: 600px) {
-
-            .logo {
-                font-size: 21px;
-            }
-
-            .logo-icon {
-                width: 35px;
-                height: 35px;
-            }
-
-            .hero-content h1 {
-                font-size: 42px;
-                letter-spacing: -1.5px;
-            }
-
-            .hero-content p {
-                font-size: 15px;
-            }
-
-            .features {
-                grid-template-columns: 1fr;
-            }
-
-            .product-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 12px;
-            }
-
-            .product-image {
-                height: 125px;
-                font-size: 55px;
-            }
-
-            .product-body {
-                padding: 12px;
-            }
-
-            .product-name {
-                font-size: 14px;
-            }
-
-            .product-description {
-                font-size: 11px;
-            }
-
-            .section-heading h2 {
-                font-size: 25px;
-            }
-        }
-
-        @media (max-width: 400px) {
-
-            .product-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .product-image {
-                height: 160px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SnackPass | Campus Snack Ordering</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --primary:#ff6b00;
+    --primary-light:#fff2e8;
+    --dark:#171717;
+    --text:#333;
+    --muted:#777;
+    --bg:#fafafa;
+    --white:#fff;
+    --border:#e8e8e8;
+    --success:#20a464;
+}
+
+body{
+    font-family:Inter,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+button,input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+/* HEADER */
+
+header{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:rgba(255,255,255,.95);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+}
+
+.nav{
+    max-width:1400px;
+    margin:auto;
+    min-height:74px;
+    padding:0 30px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:25px;
+    font-weight:800;
+    color:var(--dark);
+}
+
+.logo-icon{
+    width:40px;
+    height:40px;
+    display:grid;
+    place-items:center;
+    background:var(--primary-light);
+    border-radius:12px;
+}
+
+.logo span{
+    color:var(--primary);
+}
+
+.nav-info{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.campus-badge{
+    background:#f4f4f4;
+    padding:8px 13px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.nav-cart{
+    position:relative;
+    width:45px;
+    height:45px;
+    border:0;
+    border-radius:12px;
+    background:var(--primary);
+    color:#fff;
+    font-size:20px;
+}
+
+.nav-cart-count{
+    position:absolute;
+    top:-6px;
+    right:-6px;
+    width:21px;
+    height:21px;
+    display:grid;
+    place-items:center;
+    background:#111;
+    color:#fff;
+    border-radius:50%;
+    font-size:11px;
+    font-weight:bold;
+}
+
+/* HERO */
+
+.hero{
+    max-width:1400px;
+    margin:auto;
+    padding:55px 30px 35px;
+    display:grid;
+    grid-template-columns:1.4fr 1fr;
+    gap:40px;
+    align-items:center;
+}
+
+.hero-content h1{
+    font-size:clamp(38px,5vw,68px);
+    line-height:1.03;
+    letter-spacing:-2px;
+    color:var(--dark);
+    margin-bottom:20px;
+}
+
+.hero-content h1 span{
+    color:var(--primary);
+}
+
+.hero-content p{
+    max-width:650px;
+    color:var(--muted);
+    font-size:18px;
+    margin-bottom:28px;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:12px;
+}
+
+.primary-btn,
+.secondary-btn{
+    padding:13px 20px;
+    border-radius:12px;
+    font-weight:700;
+    transition:.25s;
+}
+
+.primary-btn{
+    background:var(--primary);
+    color:white;
+    border:0;
+}
+
+.primary-btn:hover{
+    transform:translateY(-2px);
+}
+
+.secondary-btn{
+    background:white;
+    color:var(--dark);
+    border:1px solid var(--border);
+}
+
+.hero-card{
+    min-height:280px;
+    border-radius:28px;
+    background:linear-gradient(135deg,#fff4e9,#ffe2cc);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:150px;
+}
+
+/* FEATURES */
+
+.features{
+    max-width:1400px;
+    margin:auto;
+    padding:15px 30px 35px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.feature{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:18px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+
+.feature-icon{
+    font-size:26px;
+}
+
+.feature strong{
+    display:block;
+}
+
+.feature small{
+    color:var(--muted);
+}
+
+/* MAIN */
+
+.main{
+    max-width:1400px;
+    margin:auto;
+    padding:30px;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 380px;
+    gap:30px;
+    align-items:start;
+}
+
+.section-heading{
+    margin-bottom:20px;
+}
+
+.section-heading h2{
+    font-size:30px;
+    color:var(--dark);
+}
+
+.section-heading p{
+    color:var(--muted);
+}
+
+/* SEARCH */
+
+.search-box{
+    position:relative;
+    margin-bottom:18px;
+}
+
+.search-box input{
+    width:100%;
+    padding:16px 18px 16px 48px;
+    border:1px solid var(--border);
+    border-radius:14px;
+    background:white;
+    outline:none;
+}
+
+.search-box input:focus{
+    border-color:var(--primary);
+}
+
+.search-icon{
+    position:absolute;
+    left:17px;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+/* CATEGORY */
+
+.categories{
+    display:flex;
+    gap:9px;
+    overflow-x:auto;
+    padding-bottom:12px;
+    margin-bottom:25px;
+    scrollbar-width:none;
+}
+
+.category-btn{
+    flex-shrink:0;
+    border:1px solid var(--border);
+    background:white;
+    padding:9px 15px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.category-btn.active{
+    background:var(--primary);
+    border-color:var(--primary);
+    color:white;
+}
+
+/* PRODUCTS */
+
+.product-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:18px;
+}
+
+.product{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:18px;
+    overflow:hidden;
+    transition:.25s;
+    animation:fadeUp .4s ease;
+}
+
+.product:hover{
+    transform:translateY(-4px);
+    box-shadow:0 10px 35px rgba(0,0,0,.07);
+}
+
+.product-image{
+    height:155px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,#fff5ec,#fffaf7);
+    font-size:72px;
+}
+
+.product-body{
+    padding:16px;
+}
+
+.product-category{
+    color:var(--primary);
+    font-size:11px;
+    font-weight:800;
+    text-transform:uppercase;
+}
+
+.product-name{
+    margin:5px 0;
+    color:var(--dark);
+    font-size:17px;
+    font-weight:750;
+}
+
+.product-description{
+    color:var(--muted);
+    font-size:12px;
+    min-height:36px;
+}
+
+.product-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:13px;
+}
+
+.price{
+    color:var(--dark);
+    font-size:17px;
+    font-weight:800;
+}
+
+.add-btn{
+    border:0;
+    width:36px;
+    height:36px;
+    border-radius:10px;
+    background:var(--primary);
+    color:white;
+    font-size:21px;
+}
+
+/* CART */
+
+.cart{
+    position:sticky;
+    top:94px;
+    background:white;
+    border:1px solid var(--border);
+    border-radius:20px;
+    box-shadow:0 10px 35px rgba(0,0,0,.07);
+    overflow:hidden;
+}
+
+.cart-header{
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    border-bottom:1px solid var(--border);
+}
+
+.cart-count-label{
+    background:var(--primary-light);
+    color:var(--primary);
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:800;
+}
+
+.cart-items{
+    max-height:430px;
+    overflow-y:auto;
+}
+
+.empty-cart{
+    padding:45px 20px;
+    text-align:center;
+    color:#999;
+}
+
+.empty-cart-icon{
+    font-size:50px;
+}
+
+.cart-item{
+    padding:15px 18px;
+    display:grid;
+    grid-template-columns:45px 1fr auto;
+    gap:10px;
+    border-bottom:1px solid #f0f0f0;
+}
+
+.cart-item-icon{
+    width:45px;
+    height:45px;
+    display:grid;
+    place-items:center;
+    border-radius:10px;
+    background:var(--primary-light);
+}
+
+.cart-item-name{
+    font-size:13px;
+    font-weight:750;
+}
+
+.cart-item-price{
+    font-size:12px;
+    color:var(--muted);
+}
+
+.quantity-controls{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    margin-top:7px;
+}
+
+.quantity-controls button{
+    width:25px;
+    height:25px;
+    border:1px solid var(--border);
+    border-radius:7px;
+    background:white;
+}
+
+.quantity{
+    min-width:15px;
+    text-align:center;
+    font-size:12px;
+    font-weight:800;
+}
+
+.remove-btn{
+    border:0;
+    background:transparent;
+    color:#aaa;
+}
+
+.cart-summary{
+    padding:18px;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:10px;
+    font-size:14px;
+    color:#666;
+}
+
+.summary-row.total{
+    padding-top:13px;
+    margin-top:10px;
+    border-top:1px dashed #ddd;
+    color:var(--dark);
+    font-size:18px;
+    font-weight:800;
+}
+
+.checkout-btn{
+    width:100%;
+    border:0;
+    padding:15px;
+    border-radius:12px;
+    background:var(--primary);
+    color:white;
+    font-weight:800;
+}
+
+.checkout-btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+/* MOBILE CART */
+
+.mobile-cart-bar{
+    display:none;
+    position:fixed;
+    left:15px;
+    right:15px;
+    bottom:15px;
+    z-index:900;
+    padding:10px 13px;
+    background:#171717;
+    color:white;
+    border-radius:15px;
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
+}
+
+.mobile-cart-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.mobile-cart-info strong{
+    display:block;
+}
+
+.mobile-cart-info small{
+    color:#bbb;
+}
+
+.mobile-cart-button{
+    border:0;
+    background:var(--primary);
+    color:white;
+    padding:10px 15px;
+    border-radius:10px;
+    font-weight:750;
+}
+
+/* MODAL */
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    z-index:2000;
+    background:rgba(0,0,0,.58);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal-overlay.active{
+    display:flex;
+}
+
+.checkout-modal{
+    width:min(600px,100%);
+    max-height:90vh;
+    overflow-y:auto;
+    background:white;
+    border-radius:22px;
+}
+
+.modal-header{
+    padding:22px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid var(--border);
+}
+
+.close-modal{
+    border:0;
+    background:#f4f4f4;
+    width:35px;
+    height:35px;
+    border-radius:10px;
+}
+
+.checkout-content{
+    padding:22px;
+}
+
+.form-group{
+    margin-bottom:18px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:7px;
+    font-size:13px;
+    font-weight:750;
+}
+
+.form-group input{
+    width:100%;
+    padding:13px 14px;
+    border:1px solid var(--border);
+    border-radius:11px;
+    outline:none;
+}
+
+/* PAYMENT */
+
+.payment-title{
+    margin:22px 0 12px;
+    font-size:17px;
+}
+
+.payment-option{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    padding:14px;
+    margin-bottom:9px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.payment-option:hover{
+    border-color:var(--primary);
+    background:var(--primary-light);
+}
+
+.payment-option:has(input:checked){
+    border-color:var(--primary);
+    background:var(--primary-light);
+}
+
+.payment-option input{
+    accent-color:var(--primary);
+}
+
+.payment-icon{
+    width:38px;
+    height:38px;
+    display:grid;
+    place-items:center;
+    background:white;
+    border-radius:9px;
+    font-size:20px;
+}
+
+.payment-details strong{
+    display:block;
+    font-size:14px;
+}
+
+.payment-details small{
+    color:var(--muted);
+    font-size:11px;
+}
+
+.modal-total{
+    margin-top:20px;
+    padding:15px;
+    background:#f8f8f8;
+    border-radius:12px;
+    display:flex;
+    justify-content:space-between;
+    font-weight:800;
+}
+
+.confirm-btn{
+    width:100%;
+    margin-top:15px;
+    border:0;
+    padding:15px;
+    border-radius:12px;
+    background:var(--primary);
+    color:white;
+    font-weight:800;
+}
+
+/* SUCCESS */
+
+.success-screen{
+    padding:35px 25px;
+    text-align:center;
+}
+
+.success-icon{
+    width:75px;
+    height:75px;
+    display:grid;
+    place-items:center;
+    margin:0 auto 18px;
+    border-radius:50%;
+    background:#e8f8ef;
+    color:var(--success);
+    font-size:40px;
+}
+
+.token-box{
+    margin:22px 0;
+    padding:18px;
+    border:2px dashed var(--primary);
+    border-radius:15px;
+    background:var(--primary-light);
+}
+
+.token-label{
+    display:block;
+    color:var(--muted);
+    font-size:12px;
+}
+
+.token{
+    color:var(--primary);
+    font-size:31px;
+    letter-spacing:2px;
+    font-weight:900;
+}
+
+.pickup-note{
+    padding:13px;
+    background:#f5f5f5;
+    border-radius:10px;
+    font-size:13px;
+}
+
+/* FOOTER */
+
+footer{
+    margin-top:50px;
+    padding:40px 30px;
+    background:#171717;
+    color:white;
+    text-align:center;
+}
+
+footer span{
+    color:var(--primary);
+}
+
+footer p{
+    color:#999;
+    font-size:13px;
+    margin-top:6px;
+}
+
+/* ANIMATION */
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+
+    .product-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .features{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:850px){
+
+    .campus-badge{
+        display:none;
+    }
+
+    .hero{
+        grid-template-columns:1fr;
+        padding:40px 18px 25px;
+    }
+
+    .hero-card{
+        min-height:180px;
+        font-size:100px;
+    }
+
+    .features{
+        padding:10px 18px 25px;
+    }
+
+    .main{
+        display:block;
+        padding:25px 18px 100px;
+    }
+
+    .cart{
+        display:none;
+    }
+
+    .mobile-cart-bar{
+        display:block;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .hero-content h1{
+        font-size:42px;
+    }
+
+    .hero-content p{
+        font-size:15px;
+    }
+
+    .features{
+        grid-template-columns:1fr;
+    }
+
+    .product-grid{
+        grid-template-columns:1fr 1fr;
+        gap:12px;
+    }
+
+    .product-image{
+        height:125px;
+        font-size:55px;
+    }
+
+    .product-body{
+        padding:12px;
+    }
+
+    .product-name{
+        font-size:14px;
+    }
+
+}
+
+@media(max-width:400px){
+
+    .product-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
 </head>
 
 <body>
 
-<!-- =========================
-     HEADER
-========================== -->
-
 <header>
 
-    <nav class="nav">
+<nav class="nav">
 
-        <div class="logo">
-            <div class="logo-icon">🍿</div>
-            Snack<span>Pass</span>
+    <div class="logo">
+        <div class="logo-icon">🍿</div>
+        Snack<span>Pass</span>
+    </div>
+
+    <div class="nav-info">
+
+        <div class="campus-badge">
+            🎓 Campus Ordering
         </div>
 
-        <div class="nav-info">
+        <button class="nav-cart" onclick="scrollToCart()">
+            🛒
+            <span class="nav-cart-count" id="navCartCount">0</span>
+        </button>
 
-            <div class="campus-badge">
-                🎓 Campus Ordering
-            </div>
+    </div>
 
-            <button class="nav-cart" onclick="scrollToCart()">
-                🛒
-
-                <span class="nav-cart-count" id="navCartCount">
-                    0
-                </span>
-            </button>
-
-        </div>
-
-    </nav>
+</nav>
 
 </header>
 
-
-<!-- =========================
-     HERO
-========================== -->
 
 <section class="hero">
 
@@ -1319,278 +933,174 @@
 
     </div>
 
-
     <div class="hero-card">
-
         🍟
-
     </div>
 
 </section>
 
-
-<!-- =========================
-     FEATURES
-========================== -->
 
 <section class="features">
 
     <div class="feature">
-
         <div class="feature-icon">⚡</div>
-
         <div>
             <strong>Order Faster</strong>
             <small>Skip long queues</small>
         </div>
-
     </div>
 
-
     <div class="feature">
-
         <div class="feature-icon">🔎</div>
-
         <div>
             <strong>Find Easily</strong>
             <small>Search 45+ snacks</small>
         </div>
-
     </div>
 
-
     <div class="feature">
-
         <div class="feature-icon">💳</div>
-
         <div>
             <strong>Pay Your Way</strong>
             <small>Multiple payment modes</small>
         </div>
-
     </div>
 
-
     <div class="feature">
-
         <div class="feature-icon">🎟️</div>
-
         <div>
             <strong>Easy Pickup</strong>
             <small>Use your order token</small>
         </div>
-
     </div>
 
 </section>
 
 
-<!-- =========================
-     MAIN
-========================== -->
-
 <main class="main" id="menu">
 
+<section class="menu-section">
 
-    <!-- MENU -->
+    <div class="section-heading">
 
-    <section class="menu-section">
+        <h2>Explore Snacks</h2>
 
-        <div class="section-heading">
+        <p>
+            Fresh favourites for every campus craving.
+        </p>
 
-            <div>
-                <h2>Explore Snacks</h2>
-                <p>Fresh favourites for every campus craving.</p>
-            </div>
+    </div>
 
+
+    <div class="search-box">
+
+        <span class="search-icon">🔎</span>
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search snacks...">
+
+    </div>
+
+
+    <div class="categories">
+
+        <button class="category-btn active" data-category="All">
+            All
+        </button>
+
+        <button class="category-btn" data-category="South Indian">
+            South Indian
+        </button>
+
+        <button class="category-btn" data-category="Fried Snacks">
+            Fried Snacks
+        </button>
+
+        <button class="category-btn" data-category="Fast Food">
+            Fast Food
+        </button>
+
+        <button class="category-btn" data-category="Sandwiches">
+            Sandwiches
+        </button>
+
+        <button class="category-btn" data-category="Bakery">
+            Bakery
+        </button>
+
+        <button class="category-btn" data-category="Sweets">
+            Sweets
+        </button>
+
+        <button class="category-btn" data-category="Healthy">
+            Healthy
+        </button>
+
+        <button class="category-btn" data-category="Beverages">
+            Beverages
+        </button>
+
+    </div>
+
+
+    <div class="product-grid" id="productGrid"></div>
+
+</section>
+
+
+<aside class="cart" id="desktopCart">
+
+    <div class="cart-header">
+
+        <h3>Your Order</h3>
+
+        <span
+            class="cart-count-label"
+            id="cartCountLabel">
+
+            0 items
+
+        </span>
+
+    </div>
+
+    <div class="cart-items" id="cartItems"></div>
+
+    <div class="cart-summary">
+
+        <div class="summary-row">
+            <span>Subtotal</span>
+            <strong id="subtotal">₹0</strong>
         </div>
 
-
-        <!-- SEARCH -->
-
-        <div class="search-box">
-
-            <span class="search-icon">🔎</span>
-
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Search for samosa, sandwich, fries..."
-                autocomplete="off">
-
+        <div class="summary-row">
+            <span>Service Fee</span>
+            <strong id="serviceFee">₹0</strong>
         </div>
 
-
-        <!-- CATEGORIES -->
-
-        <div class="categories" id="categories">
-
-            <button
-                class="category-btn active"
-                data-category="All">
-
-                All
-
-            </button>
-
-            <button
-                class="category-btn"
-                data-category="South Indian">
-
-                South Indian
-
-            </button>
-
-            <button
-                class="category-btn"
-                data-category="Fried Snacks">
-
-                Fried Snacks
-
-            </button>
-
-            <button
-                class="category-btn"
-                data-category="Fast Food">
-
-                Fast Food
-
-            </button>
-
-            <button
-                class="category-btn"
-                data-category="Sandwiches">
-
-                Sandwiches
-
-            </button>
-
-            <button
-                class="category-btn"
-                data-category="Bakery">
-
-                Bakery
-
-            </button>
-
-            <button
-                class="category-btn"
-                data-category="Sweets">
-
-                Sweets
-
-            </button>
-
-            <button
-                class="category-btn"
-                data-category="Healthy">
-
-                Healthy
-
-            </button>
-
-            <button
-                class="category-btn"
-                data-category="Beverages">
-
-                Beverages
-
-            </button>
-
+        <div class="summary-row total">
+            <span>Total</span>
+            <strong id="total">₹0</strong>
         </div>
 
+        <button
+            class="checkout-btn"
+            id="checkoutBtn"
+            onclick="openCheckout()"
+            disabled>
 
-        <!-- PRODUCTS -->
+            Proceed to Checkout →
 
-        <div
-            class="product-grid"
-            id="productGrid">
-        </div>
+        </button>
 
-    </section>
+    </div>
 
-
-    <!-- CART -->
-
-    <aside class="cart" id="desktopCart">
-
-        <div class="cart-header">
-
-            <h3>Your Order</h3>
-
-            <span
-                class="cart-count-label"
-                id="cartCountLabel">
-
-                0 items
-
-            </span>
-
-        </div>
-
-
-        <div
-            class="cart-items"
-            id="cartItems">
-
-        </div>
-
-
-        <div class="cart-summary">
-
-            <div class="summary-row">
-
-                <span>Subtotal</span>
-
-                <strong id="subtotal">
-                    ₹0
-                </strong>
-
-            </div>
-
-
-            <div class="summary-row">
-
-                <span>Service Fee</span>
-
-                <strong id="serviceFee">
-                    ₹0
-                </strong>
-
-            </div>
-
-
-            <div class="summary-row total">
-
-                <span>Total</span>
-
-                <strong id="total">
-                    ₹0
-                </strong>
-
-            </div>
-
-
-            <button
-                class="checkout-btn"
-                id="checkoutBtn"
-                onclick="openCheckout()"
-                disabled>
-
-                Proceed to Checkout →
-
-            </button>
-
-        </div>
-
-    </aside>
+</aside>
 
 </main>
 
-
-<!-- =========================
-     MOBILE CART
-========================== -->
 
 <div class="mobile-cart-bar">
 
@@ -1608,7 +1118,6 @@
 
         </div>
 
-
         <button
             class="mobile-cart-button"
             onclick="openCheckout()">
@@ -1622,203 +1131,182 @@
 </div>
 
 
-<!-- =========================
-     CHECKOUT MODAL
-========================== -->
+<!-- CHECKOUT -->
 
-<div
-    class="modal-overlay"
-    id="checkoutModal">
+<div class="modal-overlay" id="checkoutModal">
 
-    <div class="checkout-modal">
+<div class="checkout-modal">
 
-        <div class="modal-header">
+    <div class="modal-header">
 
-            <h2>Complete Your Order</h2>
+        <h2>Complete Your Order</h2>
 
-            <button
-                class="close-modal"
-                onclick="closeCheckout()">
+        <button
+            class="close-modal"
+            onclick="closeCheckout()">
 
-                ✕
+            ✕
 
-            </button>
+        </button>
+
+    </div>
+
+
+    <div class="checkout-content" id="checkoutContent">
+
+        <div class="form-group">
+
+            <label>Your Name</label>
+
+            <input
+                type="text"
+                id="customerName"
+                placeholder="Enter your name">
 
         </div>
 
 
-        <div
-            class="checkout-content"
-            id="checkoutContent">
+        <div class="form-group">
 
+            <label>Phone Number</label>
 
-            <!-- CUSTOMER DETAILS -->
-
-            <div class="form-group">
-
-                <label for="customerName">
-                    Your Name
-                </label>
-
-                <input
-                    type="text"
-                    id="customerName"
-                    placeholder="Enter your name">
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="customerPhone">
-                    Phone Number
-                </label>
-
-                <input
-                    type="tel"
-                    id="customerPhone"
-                    placeholder="Enter your phone number"
-                    maxlength="10">
-
-            </div>
-
-
-            <!-- PAYMENT -->
-
-            <h3 class="payment-title">
-                Choose Payment Method
-            </h3>
-
-
-            <label class="payment-option">
-
-                <input
-                    type="radio"
-                    name="payment"
-                    value="UPI">
-
-                <div class="payment-icon">
-                    📱
-                </div>
-
-                <div class="payment-details">
-
-                    <strong>UPI</strong>
-
-                    <small>
-                        Google Pay, PhonePe, Paytm and more
-                    </small>
-
-                </div>
-
-            </label>
-
-
-            <label class="payment-option">
-
-                <input
-                    type="radio"
-                    name="payment"
-                    value="Card">
-
-                <div class="payment-icon">
-                    💳
-                </div>
-
-                <div class="payment-details">
-
-                    <strong>Credit / Debit Card</strong>
-
-                    <small>
-                        Pay securely using your card
-                    </small>
-
-                </div>
-
-            </label>
-
-
-            <label class="payment-option">
-
-                <input
-                    type="radio"
-                    name="payment"
-                    value="Net Banking">
-
-                <div class="payment-icon">
-                    🏦
-                </div>
-
-                <div class="payment-details">
-
-                    <strong>Net Banking</strong>
-
-                    <small>
-                        Pay directly through your bank
-                    </small>
-
-                </div>
-
-            </label>
-
-
-            <label class="payment-option">
-
-                <input
-                    type="radio"
-                    name="payment"
-                    value="Cash at Counter">
-
-                <div class="payment-icon">
-                    💵
-                </div>
-
-                <div class="payment-details">
-
-                    <strong>Cash at Counter</strong>
-
-                    <small>
-                        Pay when collecting your order
-                    </small>
-
-                </div>
-
-            </label>
-
-
-            <!-- TOTAL -->
-
-            <div class="modal-total">
-
-                <span>
-                    Order Total
-                </span>
-
-                <span id="modalTotal">
-                    ₹0
-                </span>
-
-            </div>
-
-
-            <button
-                class="confirm-btn"
-                onclick="confirmOrder()">
-
-                Confirm Order & Generate Token 🎟️
-
-            </button>
+            <input
+                type="tel"
+                id="customerPhone"
+                maxlength="10"
+                placeholder="Enter 10-digit number">
 
         </div>
+
+
+        <!-- PAYMENT MODES ADDED -->
+
+        <h3 class="payment-title">
+            Choose Payment Method
+        </h3>
+
+
+        <label class="payment-option">
+
+            <input
+                type="radio"
+                name="payment"
+                value="UPI">
+
+            <div class="payment-icon">
+                📱
+            </div>
+
+            <div class="payment-details">
+
+                <strong>UPI</strong>
+
+                <small>
+                    Google Pay, PhonePe, Paytm and more
+                </small>
+
+            </div>
+
+        </label>
+
+
+        <label class="payment-option">
+
+            <input
+                type="radio"
+                name="payment"
+                value="Credit / Debit Card">
+
+            <div class="payment-icon">
+                💳
+            </div>
+
+            <div class="payment-details">
+
+                <strong>Credit / Debit Card</strong>
+
+                <small>
+                    Pay securely using your card
+                </small>
+
+            </div>
+
+        </label>
+
+
+        <label class="payment-option">
+
+            <input
+                type="radio"
+                name="payment"
+                value="Net Banking">
+
+            <div class="payment-icon">
+                🏦
+            </div>
+
+            <div class="payment-details">
+
+                <strong>Net Banking</strong>
+
+                <small>
+                    Pay through your bank account
+                </small>
+
+            </div>
+
+        </label>
+
+
+        <label class="payment-option">
+
+            <input
+                type="radio"
+                name="payment"
+                value="Cash at Counter">
+
+            <div class="payment-icon">
+                💵
+            </div>
+
+            <div class="payment-details">
+
+                <strong>Cash at Counter</strong>
+
+                <small>
+                    Pay when you collect your order
+                </small>
+
+            </div>
+
+        </label>
+
+
+        <div class="modal-total">
+
+            <span>Order Total</span>
+
+            <span id="modalTotal">
+                ₹0
+            </span>
+
+        </div>
+
+
+        <button
+            class="confirm-btn"
+            onclick="confirmOrder()">
+
+            Confirm Order & Generate Token 🎟️
+
+        </button>
 
     </div>
 
 </div>
 
+</div>
 
-<!-- =========================
-     FOOTER
-========================== -->
 
 <footer>
 
@@ -1830,7 +1318,7 @@
         Smart campus snack ordering made simple.
     </p>
 
-    <p style="margin-top:10px;">
+    <p>
         Order ahead. Skip the queue. Enjoy your snacks.
     </p>
 
@@ -1839,1219 +1327,1058 @@
 
 <script>
 
-    /* =========================================
-       SNACK DATA
-    ========================================== */
-
-    const snacks = [
-
-        // SOUTH INDIAN
-
-        {
-            id: 1,
-            name: "Idli",
-            category: "South Indian",
-            price: 30,
-            emoji: "🍚",
-            description: "Soft steamed rice cakes"
-        },
-
-        {
-            id: 2,
-            name: "Mini Idli",
-            category: "South Indian",
-            price: 35,
-            emoji: "🍚",
-            description: "Bite-sized idlis with chutney"
-        },
-
-        {
-            id: 3,
-            name: "Masala Dosa",
-            category: "South Indian",
-            price: 60,
-            emoji: "🥞",
-            description: "Crispy dosa with potato masala"
-        },
-
-        {
-            id: 4,
-            name: "Plain Dosa",
-            category: "South Indian",
-            price: 45,
-            emoji: "🥞",
-            description: "Classic crispy dosa"
-        },
-
-        {
-            id: 5,
-            name: "Onion Uttapam",
-            category: "South Indian",
-            price: 55,
-            emoji: "🥞",
-            description: "Soft uttapam with onions"
-        },
-
-        {
-            id: 6,
-            name: "Medu Vada",
-            category: "South Indian",
-            price: 35,
-            emoji: "🍩",
-            description: "Crispy lentil vada"
-        },
-
-        // FRIED SNACKS
-
-        {
-            id: 7,
-            name: "Samosa",
-            category: "Fried Snacks",
-            price: 20,
-            emoji: "🔺",
-            description: "Crispy potato-filled samosa"
-        },
-
-        {
-            id: 8,
-            name: "Onion Pakoda",
-            category: "Fried Snacks",
-            price: 35,
-            emoji: "🥨",
-            description: "Crunchy onion fritters"
-        },
-
-        {
-            id: 9,
-            name: "Bread Pakoda",
-            category: "Fried Snacks",
-            price: 35,
-            emoji: "🍞",
-            description: "Golden fried bread snack"
-        },
-
-        {
-            id: 10,
-            name: "Aloo Bonda",
-            category: "Fried Snacks",
-            price: 30,
-            emoji: "🟡",
-            description: "Spiced potato fritter"
-        },
-
-        {
-            id: 11,
-            name: "Paneer Pakoda",
-            category: "Fried Snacks",
-            price: 60,
-            emoji: "🧀",
-            description: "Crispy paneer bites"
-        },
-
-        {
-            id: 12,
-            name: "French Fries",
-            category: "Fried Snacks",
-            price: 50,
-            emoji: "🍟",
-            description: "Crispy golden fries"
-        },
-
-        // FAST FOOD
-
-        {
-            id: 13,
-            name: "Veg Burger",
-            category: "Fast Food",
-            price: 70,
-            emoji: "🍔",
-            description: "Classic vegetable burger"
-        },
-
-        {
-            id: 14,
-            name: "Cheese Burger",
-            category: "Fast Food",
-            price: 90,
-            emoji: "🍔",
-            description: "Loaded with melted cheese"
-        },
-
-        {
-            id: 15,
-            name: "Veg Pizza",
-            category: "Fast Food",
-            price: 100,
-            emoji: "🍕",
-            description: "Cheesy vegetable pizza"
-        },
-
-        {
-            id: 16,
-            name: "Cheese Pizza",
-            category: "Fast Food",
-            price: 110,
-            emoji: "🍕",
-            description: "Classic cheese-loaded pizza"
-        },
-
-        {
-            id: 17,
-            name: "Veg Momos",
-            category: "Fast Food",
-            price: 70,
-            emoji: "🥟",
-            description: "Steamed vegetable dumplings"
-        },
-
-        {
-            id: 18,
-            name: "Noodles",
-            category: "Fast Food",
-            price: 70,
-            emoji: "🍜",
-            description: "Street-style veg noodles"
-        },
-
-        {
-            id: 19,
-            name: "Pasta",
-            category: "Fast Food",
-            price: 80,
-            emoji: "🍝",
-            description: "Creamy campus-style pasta"
-        },
-
-        {
-            id: 20,
-            name: "Veg Manchurian",
-            category: "Fast Food",
-            price: 80,
-            emoji: "🥘",
-            description: "Spicy Indo-Chinese favourite"
-        },
-
-        // SANDWICHES
-
-        {
-            id: 21,
-            name: "Veg Sandwich",
-            category: "Sandwiches",
-            price: 60,
-            emoji: "🥪",
-            description: "Fresh vegetable sandwich"
-        },
-
-        {
-            id: 22,
-            name: "Cheese Sandwich",
-            category: "Sandwiches",
-            price: 75,
-            emoji: "🥪",
-            description: "Toasted cheese sandwich"
-        },
-
-        {
-            id: 23,
-            name: "Grilled Sandwich",
-            category: "Sandwiches",
-            price: 80,
-            emoji: "🥪",
-            description: "Crispy grilled sandwich"
-        },
-
-        {
-            id: 24,
-            name: "Paneer Sandwich",
-            category: "Sandwiches",
-            price: 90,
-            emoji: "🥪",
-            description: "Paneer and fresh vegetables"
-        },
-
-        {
-            id: 25,
-            name: "Corn Sandwich",
-            category: "Sandwiches",
-            price: 70,
-            emoji: "🥪",
-            description: "Sweet corn and cheese"
-        },
-
-        // BAKERY
-
-        {
-            id: 26,
-            name: "Veg Puff",
-            category: "Bakery",
-            price: 30,
-            emoji: "🥐",
-            description: "Flaky vegetable puff"
-        },
-
-        {
-            id: 27,
-            name: "Paneer Puff",
-            category: "Bakery",
-            price: 40,
-            emoji: "🥐",
-            description: "Paneer-filled flaky puff"
-        },
-
-        {
-            id: 28,
-            name: "Chocolate Muffin",
-            category: "Bakery",
-            price: 50,
-            emoji: "🧁",
-            description: "Soft chocolate muffin"
-        },
-
-        {
-            id: 29,
-            name: "Veg Roll",
-            category: "Bakery",
-            price: 50,
-            emoji: "🌯",
-            description: "Fresh vegetable roll"
-        },
-
-        {
-            id: 30,
-            name: "Cream Bun",
-            category: "Bakery",
-            price: 35,
-            emoji: "🍞",
-            description: "Soft bun with cream filling"
-        },
-
-        // SWEETS
-
-        {
-            id: 31,
-            name: "Gulab Jamun",
-            category: "Sweets",
-            price: 35,
-            emoji: "🍮",
-            description: "Warm syrupy sweet"
-        },
-
-        {
-            id: 32,
-            name: "Jalebi",
-            category: "Sweets",
-            price: 40,
-            emoji: "🍥",
-            description: "Crispy syrup-coated jalebi"
-        },
-
-        {
-            id: 33,
-            name: "Laddu",
-            category: "Sweets",
-            price: 30,
-            emoji: "🟠",
-            description: "Traditional Indian sweet"
-        },
-
-        {
-            id: 34,
-            name: "Brownie",
-            category: "Sweets",
-            price: 60,
-            emoji: "🍫",
-            description: "Rich chocolate brownie"
-        },
-
-        {
-            id: 35,
-            name: "Ice Cream Cup",
-            category: "Sweets",
-            price: 50,
-            emoji: "🍨",
-            description: "Cold creamy dessert"
-        },
-
-        // HEALTHY
-
-        {
-            id: 36,
-            name: "Fruit Bowl",
-            category: "Healthy",
-            price: 70,
-            emoji: "🍎",
-            description: "Fresh seasonal fruits"
-        },
-
-        {
-            id: 37,
-            name: "Sprouts Salad",
-            category: "Healthy",
-            price: 60,
-            emoji: "🥗",
-            description: "Healthy mixed sprouts"
-        },
-
-        {
-            id: 38,
-            name: "Corn Cup",
-            category: "Healthy",
-            price: 50,
-            emoji: "🌽",
-            description: "Sweet corn with seasoning"
-        },
-
-        {
-            id: 39,
-            name: "Peanut Chaat",
-            category: "Healthy",
-            price: 45,
-            emoji: "🥜",
-            description: "Spiced peanut snack"
-        },
-
-        {
-            id: 40,
-            name: "Granola Bowl",
-            category: "Healthy",
-            price: 80,
-            emoji: "🥣",
-            description: "Granola with fruits"
-        },
-
-        // BEVERAGES
-
-        {
-            id: 41,
-            name: "Filter Coffee",
-            category: "Beverages",
-            price: 30,
-            emoji: "☕",
-            description: "Fresh South Indian filter coffee"
-        },
-
-        {
-            id: 42,
-            name: "Cold Coffee",
-            category: "Beverages",
-            price: 60,
-            emoji: "🥤",
-            description: "Chilled creamy coffee"
-        },
-
-        {
-            id: 43,
-            name: "Fresh Lime Soda",
-            category: "Beverages",
-            price: 40,
-            emoji: "🍋",
-            description: "Refreshing lime soda"
-        },
-
-        {
-            id: 44,
-            name: "Mango Shake",
-            category: "Beverages",
-            price: 70,
-            emoji: "🥭",
-            description: "Creamy mango shake"
-        },
-
-        {
-            id: 45,
-            name: "Chocolate Shake",
-            category: "Beverages",
-            price: 80,
-            emoji: "🥤",
-            description: "Rich chocolate shake"
-        }
-
-    ];
-
-
-    /* =========================================
-       STATE
-    ========================================== */
-
-    let cart = JSON.parse(
-        localStorage.getItem("snackpass-cart")
-    ) || [];
-
-    let selectedCategory = "All";
-
-
-    /* =========================================
-       DOM ELEMENTS
-    ========================================== */
-
-    const productGrid =
-        document.getElementById("productGrid");
-
-    const searchInput =
-        document.getElementById("searchInput");
-
-    const cartItems =
-        document.getElementById("cartItems");
-
-    const subtotalElement =
-        document.getElementById("subtotal");
-
-    const serviceFeeElement =
-        document.getElementById("serviceFee");
-
-    const totalElement =
-        document.getElementById("total");
-
-    const checkoutBtn =
-        document.getElementById("checkoutBtn");
-
-
-    /* =========================================
-       DISPLAY PRODUCTS
-    ========================================== */
-
-    function displayProducts() {
-
-        const searchTerm =
-            searchInput.value
-                .trim()
-                .toLowerCase();
-
-
-        const filteredSnacks =
-            snacks.filter(snack => {
-
-                const matchesCategory =
-                    selectedCategory === "All" ||
-                    snack.category === selectedCategory;
-
-                const matchesSearch =
-                    snack.name
-                        .toLowerCase()
-                        .includes(searchTerm) ||
-
-                    snack.category
-                        .toLowerCase()
-                        .includes(searchTerm) ||
-
-                    snack.description
-                        .toLowerCase()
-                        .includes(searchTerm);
-
-                return matchesCategory && matchesSearch;
-
-            });
-
-
-        if (filteredSnacks.length === 0) {
-
-            productGrid.innerHTML = `
-                <div style="
-                    grid-column:1/-1;
-                    padding:50px;
-                    text-align:center;
-                    color:#888;
-                ">
-                    <div style="font-size:45px;">🔎</div>
-
-                    <h3 style="margin-top:10px;color:#333;">
-                        No snacks found
-                    </h3>
-
-                    <p>
-                        Try searching for something else.
-                    </p>
+/* =========================
+   ORIGINAL SNACK MENU
+========================= */
+
+const snacks = [
+
+    {
+        id:1,
+        name:"Idli",
+        category:"South Indian",
+        price:30,
+        emoji:"🍚",
+        description:"Soft steamed rice cakes"
+    },
+
+    {
+        id:2,
+        name:"Mini Idli",
+        category:"South Indian",
+        price:35,
+        emoji:"🍚",
+        description:"Bite-sized idlis with chutney"
+    },
+
+    {
+        id:3,
+        name:"Masala Dosa",
+        category:"South Indian",
+        price:60,
+        emoji:"🥞",
+        description:"Crispy dosa with potato masala"
+    },
+
+    {
+        id:4,
+        name:"Plain Dosa",
+        category:"South Indian",
+        price:45,
+        emoji:"🥞",
+        description:"Classic crispy dosa"
+    },
+
+    {
+        id:5,
+        name:"Onion Uttapam",
+        category:"South Indian",
+        price:55,
+        emoji:"🥞",
+        description:"Soft uttapam with onions"
+    },
+
+    {
+        id:6,
+        name:"Medu Vada",
+        category:"South Indian",
+        price:35,
+        emoji:"🍩",
+        description:"Crispy lentil vada"
+    },
+
+    {
+        id:7,
+        name:"Samosa",
+        category:"Fried Snacks",
+        price:20,
+        emoji:"🔺",
+        description:"Crispy potato-filled samosa"
+    },
+
+    {
+        id:8,
+        name:"Onion Pakoda",
+        category:"Fried Snacks",
+        price:35,
+        emoji:"🥨",
+        description:"Crunchy onion fritters"
+    },
+
+    {
+        id:9,
+        name:"Bread Pakoda",
+        category:"Fried Snacks",
+        price:35,
+        emoji:"🍞",
+        description:"Golden fried bread snack"
+    },
+
+    {
+        id:10,
+        name:"Aloo Bonda",
+        category:"Fried Snacks",
+        price:30,
+        emoji:"🟡",
+        description:"Spiced potato fritter"
+    },
+
+    {
+        id:11,
+        name:"Paneer Pakoda",
+        category:"Fried Snacks",
+        price:60,
+        emoji:"🧀",
+        description:"Crispy paneer bites"
+    },
+
+    {
+        id:12,
+        name:"French Fries",
+        category:"Fried Snacks",
+        price:50,
+        emoji:"🍟",
+        description:"Crispy golden fries"
+    },
+
+    {
+        id:13,
+        name:"Veg Burger",
+        category:"Fast Food",
+        price:70,
+        emoji:"🍔",
+        description:"Classic vegetable burger"
+    },
+
+    {
+        id:14,
+        name:"Cheese Burger",
+        category:"Fast Food",
+        price:90,
+        emoji:"🍔",
+        description:"Loaded with melted cheese"
+    },
+
+    {
+        id:15,
+        name:"Veg Pizza",
+        category:"Fast Food",
+        price:100,
+        emoji:"🍕",
+        description:"Cheesy vegetable pizza"
+    },
+
+    {
+        id:16,
+        name:"Cheese Pizza",
+        category:"Fast Food",
+        price:110,
+        emoji:"🍕",
+        description:"Classic cheese-loaded pizza"
+    },
+
+    {
+        id:17,
+        name:"Veg Momos",
+        category:"Fast Food",
+        price:70,
+        emoji:"🥟",
+        description:"Steamed vegetable dumplings"
+    },
+
+    {
+        id:18,
+        name:"Noodles",
+        category:"Fast Food",
+        price:70,
+        emoji:"🍜",
+        description:"Street-style veg noodles"
+    },
+
+    {
+        id:19,
+        name:"Pasta",
+        category:"Fast Food",
+        price:80,
+        emoji:"🍝",
+        description:"Creamy campus-style pasta"
+    },
+
+    {
+        id:20,
+        name:"Veg Manchurian",
+        category:"Fast Food",
+        price:80,
+        emoji:"🥘",
+        description:"Spicy Indo-Chinese favourite"
+    },
+
+    {
+        id:21,
+        name:"Veg Sandwich",
+        category:"Sandwiches",
+        price:60,
+        emoji:"🥪",
+        description:"Fresh vegetable sandwich"
+    },
+
+    {
+        id:22,
+        name:"Cheese Sandwich",
+        category:"Sandwiches",
+        price:75,
+        emoji:"🥪",
+        description:"Toasted cheese sandwich"
+    },
+
+    {
+        id:23,
+        name:"Grilled Sandwich",
+        category:"Sandwiches",
+        price:80,
+        emoji:"🥪",
+        description:"Crispy grilled sandwich"
+    },
+
+    {
+        id:24,
+        name:"Paneer Sandwich",
+        category:"Sandwiches",
+        price:90,
+        emoji:"🥪",
+        description:"Paneer and fresh vegetables"
+    },
+
+    {
+        id:25,
+        name:"Corn Sandwich",
+        category:"Sandwiches",
+        price:70,
+        emoji:"🥪",
+        description:"Sweet corn and cheese"
+    },
+
+    {
+        id:26,
+        name:"Veg Puff",
+        category:"Bakery",
+        price:30,
+        emoji:"🥐",
+        description:"Flaky vegetable puff"
+    },
+
+    {
+        id:27,
+        name:"Paneer Puff",
+        category:"Bakery",
+        price:40,
+        emoji:"🥐",
+        description:"Paneer-filled flaky puff"
+    },
+
+    {
+        id:28,
+        name:"Chocolate Muffin",
+        category:"Bakery",
+        price:50,
+        emoji:"🧁",
+        description:"Soft chocolate muffin"
+    },
+
+    {
+        id:29,
+        name:"Veg Roll",
+        category:"Bakery",
+        price:50,
+        emoji:"🌯",
+        description:"Fresh vegetable roll"
+    },
+
+    {
+        id:30,
+        name:"Cream Bun",
+        category:"Bakery",
+        price:35,
+        emoji:"🍞",
+        description:"Soft bun with cream filling"
+    },
+
+    {
+        id:31,
+        name:"Gulab Jamun",
+        category:"Sweets",
+        price:35,
+        emoji:"🍮",
+        description:"Warm syrupy sweet"
+    },
+
+    {
+        id:32,
+        name:"Jalebi",
+        category:"Sweets",
+        price:40,
+        emoji:"🍥",
+        description:"Crispy syrup-coated jalebi"
+    },
+
+    {
+        id:33,
+        name:"Laddu",
+        category:"Sweets",
+        price:30,
+        emoji:"🟠",
+        description:"Traditional Indian sweet"
+    },
+
+    {
+        id:34,
+        name:"Brownie",
+        category:"Sweets",
+        price:60,
+        emoji:"🍫",
+        description:"Rich chocolate brownie"
+    },
+
+    {
+        id:35,
+        name:"Ice Cream Cup",
+        category:"Sweets",
+        price:50,
+        emoji:"🍨",
+        description:"Cold creamy dessert"
+    },
+
+    {
+        id:36,
+        name:"Fruit Bowl",
+        category:"Healthy",
+        price:70,
+        emoji:"🍎",
+        description:"Fresh seasonal fruits"
+    },
+
+    {
+        id:37,
+        name:"Sprouts Salad",
+        category:"Healthy",
+        price:60,
+        emoji:"🥗",
+        description:"Healthy mixed sprouts"
+    },
+
+    {
+        id:38,
+        name:"Corn Cup",
+        category:"Healthy",
+        price:50,
+        emoji:"🌽",
+        description:"Sweet corn with seasoning"
+    },
+
+    {
+        id:39,
+        name:"Peanut Chaat",
+        category:"Healthy",
+        price:45,
+        emoji:"🥜",
+        description:"Spiced peanut snack"
+    },
+
+    {
+        id:40,
+        name:"Granola Bowl",
+        category:"Healthy",
+        price:80,
+        emoji:"🥣",
+        description:"Granola with fruits"
+    },
+
+    {
+        id:41,
+        name:"Filter Coffee",
+        category:"Beverages",
+        price:30,
+        emoji:"☕",
+        description:"Fresh South Indian filter coffee"
+    },
+
+    {
+        id:42,
+        name:"Cold Coffee",
+        category:"Beverages",
+        price:60,
+        emoji:"🥤",
+        description:"Chilled creamy coffee"
+    },
+
+    {
+        id:43,
+        name:"Fresh Lime Soda",
+        category:"Beverages",
+        price:40,
+        emoji:"🍋",
+        description:"Refreshing lime soda"
+    },
+
+    {
+        id:44,
+        name:"Mango Shake",
+        category:"Beverages",
+        price:70,
+        emoji:"🥭",
+        description:"Creamy mango shake"
+    },
+
+    {
+        id:45,
+        name:"Chocolate Shake",
+        category:"Beverages",
+        price:80,
+        emoji:"🥤",
+        description:"Rich chocolate shake"
+    }
+
+];
+
+
+/* =========================
+   STATE
+========================= */
+
+let cart =
+    JSON.parse(localStorage.getItem("snackpass-cart")) || [];
+
+let selectedCategory="All";
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const productGrid =
+    document.getElementById("productGrid");
+
+const searchInput =
+    document.getElementById("searchInput");
+
+const cartItems =
+    document.getElementById("cartItems");
+
+
+/* =========================
+   DISPLAY PRODUCTS
+========================= */
+
+function displayProducts(){
+
+    const search =
+        searchInput.value.toLowerCase().trim();
+
+    const filtered =
+        snacks.filter(snack=>{
+
+            const categoryMatch =
+                selectedCategory==="All" ||
+                snack.category===selectedCategory;
+
+            const searchMatch =
+                snack.name.toLowerCase().includes(search) ||
+                snack.category.toLowerCase().includes(search) ||
+                snack.description.toLowerCase().includes(search);
+
+            return categoryMatch && searchMatch;
+
+        });
+
+
+    productGrid.innerHTML =
+        filtered.map(snack=>`
+
+        <article class="product">
+
+            <div class="product-image">
+                ${snack.emoji}
+            </div>
+
+            <div class="product-body">
+
+                <div class="product-category">
+                    ${snack.category}
                 </div>
-            `;
 
-            return;
-        }
+                <div class="product-name">
+                    ${snack.name}
+                </div>
 
+                <div class="product-description">
+                    ${snack.description}
+                </div>
 
-        productGrid.innerHTML =
-            filteredSnacks.map(snack => `
+                <div class="product-bottom">
 
-                <article class="product">
-
-                    <div class="product-image">
-                        ${snack.emoji}
+                    <div class="price">
+                        ₹${snack.price}
                     </div>
 
-                    <div class="product-body">
+                    <button
+                        class="add-btn"
+                        onclick="addToCart(${snack.id})">
 
-                        <div class="product-category">
-                            ${snack.category}
-                        </div>
+                        +
 
-                        <div class="product-name">
-                            ${snack.name}
-                        </div>
+                    </button>
 
-                        <div class="product-description">
-                            ${snack.description}
-                        </div>
+                </div>
 
-                        <div class="product-bottom">
+            </div>
 
-                            <div class="price">
-                                ₹${snack.price}
-                            </div>
+        </article>
 
-                            <button
-                                class="add-btn"
-                                onclick="addToCart(${snack.id})">
+        `).join("");
 
-                                +
+}
 
-                            </button>
 
-                        </div>
+/* =========================
+   ADD
+========================= */
+
+function addToCart(id){
+
+    const existing =
+        cart.find(item=>item.id===id);
+
+    if(existing){
+
+        existing.quantity++;
+
+    }else{
+
+        const snack =
+            snacks.find(item=>item.id===id);
+
+        cart.push({
+            ...snack,
+            quantity:1
+        });
+
+    }
+
+    saveCart();
+    updateCart();
+
+}
+
+
+/* =========================
+   QUANTITY
+========================= */
+
+function changeQuantity(id,amount){
+
+    const item =
+        cart.find(item=>item.id===id);
+
+    if(!item)return;
+
+    item.quantity+=amount;
+
+    if(item.quantity<=0){
+
+        cart =
+            cart.filter(item=>item.id!==id);
+
+    }
+
+    saveCart();
+    updateCart();
+
+}
+
+
+/* =========================
+   REMOVE
+========================= */
+
+function removeFromCart(id){
+
+    cart =
+        cart.filter(item=>item.id!==id);
+
+    saveCart();
+    updateCart();
+
+}
+
+
+/* =========================
+   SAVE
+========================= */
+
+function saveCart(){
+
+    localStorage.setItem(
+        "snackpass-cart",
+        JSON.stringify(cart)
+    );
+
+}
+
+
+/* =========================
+   TOTAL
+========================= */
+
+function calculateTotals(){
+
+    const subtotal =
+        cart.reduce(
+            (sum,item)=>
+            sum+(item.price*item.quantity),
+            0
+        );
+
+    const serviceFee =
+        subtotal>0 ? 5 : 0;
+
+    return{
+        subtotal,
+        serviceFee,
+        total:subtotal+serviceFee
+    };
+
+}
+
+
+/* =========================
+   UPDATE CART
+========================= */
+
+function updateCart(){
+
+    const totals =
+        calculateTotals();
+
+    const count =
+        cart.reduce(
+            (sum,item)=>
+            sum+item.quantity,
+            0
+        );
+
+
+    if(cart.length===0){
+
+        cartItems.innerHTML=`
+
+            <div class="empty-cart">
+
+                <div class="empty-cart-icon">
+                    🛒
+                </div>
+
+                <strong>
+                    Your cart is empty
+                </strong>
+
+                <p>
+                    Add some delicious snacks!
+                </p>
+
+            </div>
+
+        `;
+
+    }else{
+
+        cartItems.innerHTML =
+            cart.map(item=>`
+
+            <div class="cart-item">
+
+                <div class="cart-item-icon">
+                    ${item.emoji}
+                </div>
+
+                <div>
+
+                    <div class="cart-item-name">
+                        ${item.name}
+                    </div>
+
+                    <div class="cart-item-price">
+                        ₹${item.price} each
+                    </div>
+
+                    <div class="quantity-controls">
+
+                        <button
+                            onclick="changeQuantity(${item.id},-1)">
+                            −
+                        </button>
+
+                        <span class="quantity">
+                            ${item.quantity}
+                        </span>
+
+                        <button
+                            onclick="changeQuantity(${item.id},1)">
+                            +
+                        </button>
 
                     </div>
 
-                </article>
+                </div>
+
+                <button
+                    class="remove-btn"
+                    onclick="removeFromCart(${item.id})">
+
+                    🗑️
+
+                </button>
+
+            </div>
 
             `).join("");
 
     }
 
 
-    /* =========================================
-       ADD TO CART
-    ========================================== */
+    document.getElementById("subtotal")
+        .textContent=`₹${totals.subtotal}`;
 
-    function addToCart(id) {
+    document.getElementById("serviceFee")
+        .textContent=`₹${totals.serviceFee}`;
 
-        const existingItem =
-            cart.find(item => item.id === id);
+    document.getElementById("total")
+        .textContent=`₹${totals.total}`;
 
+    document.getElementById("cartCountLabel")
+        .textContent=
+        `${count} ${count===1?"item":"items"}`;
 
-        if (existingItem) {
+    document.getElementById("navCartCount")
+        .textContent=count;
 
-            existingItem.quantity++;
+    document.getElementById("mobileCartItems")
+        .textContent=
+        `${count} ${count===1?"item":"items"}`;
 
-        } else {
+    document.getElementById("mobileCartTotal")
+        .textContent=`₹${totals.total}`;
 
-            const snack =
-                snacks.find(item => item.id === id);
+    document.getElementById("checkoutBtn")
+        .disabled=cart.length===0;
 
-            cart.push({
-                ...snack,
-                quantity: 1
-            });
-
-        }
-
-
-        saveCart();
-
-        updateCart();
-
-    }
+}
 
 
-    /* =========================================
-       CHANGE QUANTITY
-    ========================================== */
+/* =========================
+   SEARCH
+========================= */
 
-    function changeQuantity(id, amount) {
-
-        const item =
-            cart.find(item => item.id === id);
-
-
-        if (!item) return;
+searchInput.addEventListener(
+    "input",
+    displayProducts
+);
 
 
-        item.quantity += amount;
+/* =========================
+   CATEGORY
+========================= */
 
+document
+.querySelectorAll(".category-btn")
+.forEach(button=>{
 
-        if (item.quantity <= 0) {
+    button.addEventListener("click",()=>{
 
-            cart =
-                cart.filter(item => item.id !== id);
-
-        }
-
-
-        saveCart();
-
-        updateCart();
-
-    }
-
-
-    /* =========================================
-       REMOVE ITEM
-    ========================================== */
-
-    function removeFromCart(id) {
-
-        cart =
-            cart.filter(item => item.id !== id);
-
-        saveCart();
-
-        updateCart();
-
-    }
-
-
-    /* =========================================
-       SAVE CART
-    ========================================== */
-
-    function saveCart() {
-
-        localStorage.setItem(
-            "snackpass-cart",
-            JSON.stringify(cart)
+        document
+        .querySelectorAll(".category-btn")
+        .forEach(btn=>
+            btn.classList.remove("active")
         );
 
-    }
+        button.classList.add("active");
+
+        selectedCategory =
+            button.dataset.category;
+
+        displayProducts();
+
+    });
+
+});
 
 
-    /* =========================================
-       CALCULATE TOTALS
-    ========================================== */
+/* =========================
+   OPEN CHECKOUT
+========================= */
 
-    function calculateTotals() {
+function openCheckout(){
 
-        const subtotal =
-            cart.reduce(
-                (sum, item) =>
-                    sum + item.price * item.quantity,
-                0
-            );
+    if(cart.length===0){
 
+        alert("Please add snacks to your cart.");
 
-        const serviceFee =
-            subtotal > 0 ? 5 : 0;
-
-
-        const total =
-            subtotal + serviceFee;
-
-
-        return {
-            subtotal,
-            serviceFee,
-            total
-        };
+        return;
 
     }
 
+    const totals =
+        calculateTotals();
 
-    /* =========================================
-       UPDATE CART UI
-    ========================================== */
+    document.getElementById("modalTotal")
+        .textContent=`₹${totals.total}`;
 
-    function updateCart() {
+    document.getElementById("checkoutModal")
+        .classList.add("active");
 
-        const totals =
-            calculateTotals();
+    document.body.style.overflow="hidden";
 
-
-        const itemCount =
-            cart.reduce(
-                (sum, item) =>
-                    sum + item.quantity,
-                0
-            );
+}
 
 
-        /* CART ITEMS */
+/* =========================
+   CLOSE
+========================= */
 
-        if (cart.length === 0) {
+function closeCheckout(){
 
-            cartItems.innerHTML = `
+    document.getElementById("checkoutModal")
+        .classList.remove("active");
 
-                <div class="empty-cart">
+    document.body.style.overflow="";
 
-                    <div class="empty-cart-icon">
-                        🛒
-                    </div>
+}
 
-                    <strong>
-                        Your cart is empty
-                    </strong>
 
-                    <p style="margin-top:5px;">
-                        Add some delicious snacks!
-                    </p>
+/* =========================
+   TOKEN
+========================= */
 
+function generateOrderToken(){
+
+    const chars =
+        "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+    let token="SP-";
+
+    for(let i=0;i<4;i++){
+
+        token+=
+            chars[
+                Math.floor(
+                    Math.random()*chars.length
+                )
+            ];
+
+    }
+
+    return token;
+
+}
+
+
+/* =========================
+   CONFIRM ORDER
+========================= */
+
+function confirmOrder(){
+
+    const name =
+        document.getElementById("customerName")
+        .value.trim();
+
+    const phone =
+        document.getElementById("customerPhone")
+        .value.trim();
+
+    const payment =
+        document.querySelector(
+            'input[name="payment"]:checked'
+        );
+
+
+    if(!name){
+
+        alert("Please enter your name.");
+
+        return;
+
+    }
+
+
+    if(!/^[0-9]{10}$/.test(phone)){
+
+        alert(
+            "Please enter a valid 10-digit phone number."
+        );
+
+        return;
+
+    }
+
+
+    if(!payment){
+
+        alert(
+            "Please select a payment method."
+        );
+
+        return;
+
+    }
+
+
+    const token =
+        generateOrderToken();
+
+    const totals =
+        calculateTotals();
+
+
+    document.getElementById(
+        "checkoutContent"
+    ).innerHTML=`
+
+        <div class="success-screen">
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+            <h2>
+                Order Confirmed!
+            </h2>
+
+            <p>
+                Thanks ${name}! Your order
+                has been successfully placed.
+            </p>
+
+
+            <div class="token-box">
+
+                <span class="token-label">
+                    YOUR PICKUP TOKEN
+                </span>
+
+                <div class="token">
+                    ${token}
                 </div>
-
-            `;
-
-        } else {
-
-            cartItems.innerHTML =
-                cart.map(item => `
-
-                    <div class="cart-item">
-
-                        <div class="cart-item-icon">
-                            ${item.emoji}
-                        </div>
-
-                        <div>
-
-                            <div class="cart-item-name">
-                                ${item.name}
-                            </div>
-
-                            <div class="cart-item-price">
-                                ₹${item.price} each
-                            </div>
-
-                            <div class="quantity-controls">
-
-                                <button
-                                    onclick="changeQuantity(${item.id}, -1)">
-                                    −
-                                </button>
-
-                                <span class="quantity">
-                                    ${item.quantity}
-                                </span>
-
-                                <button
-                                    onclick="changeQuantity(${item.id}, 1)">
-                                    +
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                        <button
-                            class="remove-btn"
-                            onclick="removeFromCart(${item.id})">
-
-                            🗑️
-
-                        </button>
-
-                    </div>
-
-                `).join("");
-
-        }
-
-
-        /* TOTALS */
-
-        subtotalElement.textContent =
-            `₹${totals.subtotal}`;
-
-        serviceFeeElement.textContent =
-            `₹${totals.serviceFee}`;
-
-        totalElement.textContent =
-            `₹${totals.total}`;
-
-
-        /* COUNT */
-
-        document.getElementById(
-            "cartCountLabel"
-        ).textContent =
-            `${itemCount} ${itemCount === 1 ? "item" : "items"}`;
-
-
-        document.getElementById(
-            "navCartCount"
-        ).textContent =
-            itemCount;
-
-
-        document.getElementById(
-            "mobileCartItems"
-        ).textContent =
-            `${itemCount} ${itemCount === 1 ? "item" : "items"}`;
-
-
-        document.getElementById(
-            "mobileCartTotal"
-        ).textContent =
-            `₹${totals.total}`;
-
-
-        /* CHECKOUT */
-
-        checkoutBtn.disabled =
-            cart.length === 0;
-
-    }
-
-
-    /* =========================================
-       SEARCH
-    ========================================== */
-
-    searchInput.addEventListener(
-        "input",
-        displayProducts
-    );
-
-
-    /* =========================================
-       CATEGORY FILTER
-    ========================================== */
-
-    document
-        .querySelectorAll(".category-btn")
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    document
-                        .querySelectorAll(".category-btn")
-                        .forEach(btn =>
-                            btn.classList.remove("active")
-                        );
-
-
-                    button.classList.add("active");
-
-
-                    selectedCategory =
-                        button.dataset.category;
-
-
-                    displayProducts();
-
-                }
-            );
-
-        });
-
-
-    /* =========================================
-       OPEN CHECKOUT
-    ========================================== */
-
-    function openCheckout() {
-
-        if (cart.length === 0) {
-
-            alert(
-                "Please add at least one snack to your cart."
-            );
-
-            return;
-
-        }
-
-
-        const totals =
-            calculateTotals();
-
-
-        document.getElementById(
-            "modalTotal"
-        ).textContent =
-            `₹${totals.total}`;
-
-
-        document.getElementById(
-            "checkoutModal"
-        ).classList.add("active");
-
-
-        document.body.style.overflow =
-            "hidden";
-
-    }
-
-
-    /* =========================================
-       CLOSE CHECKOUT
-    ========================================== */
-
-    function closeCheckout() {
-
-        document.getElementById(
-            "checkoutModal"
-        ).classList.remove("active");
-
-
-        document.body.style.overflow =
-            "";
-
-    }
-
-
-    /* =========================================
-       GENERATE TOKEN
-    ========================================== */
-
-    function generateOrderToken() {
-
-        const characters =
-            "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-
-
-        let token = "SP-";
-
-
-        for (let i = 0; i < 4; i++) {
-
-            token +=
-                characters[
-                    Math.floor(
-                        Math.random() *
-                        characters.length
-                    )
-                ];
-
-        }
-
-
-        return token;
-
-    }
-
-
-    /* =========================================
-       CONFIRM ORDER
-    ========================================== */
-
-    function confirmOrder() {
-
-        const name =
-            document
-                .getElementById("customerName")
-                .value.trim();
-
-
-        const phone =
-            document
-                .getElementById("customerPhone")
-                .value.trim();
-
-
-        const payment =
-            document.querySelector(
-                'input[name="payment"]:checked'
-            );
-
-
-        if (!name) {
-
-            alert("Please enter your name.");
-
-            return;
-
-        }
-
-
-        if (!/^[0-9]{10}$/.test(phone)) {
-
-            alert(
-                "Please enter a valid 10-digit phone number."
-            );
-
-            return;
-
-        }
-
-
-        if (!payment) {
-
-            alert(
-                "Please select a payment method."
-            );
-
-            return;
-
-        }
-
-
-        const token =
-            generateOrderToken();
-
-
-        const totals =
-            calculateTotals();
-
-
-        const paymentMethod =
-            payment.value;
-
-
-        /*
-
-           In a real production application,
-           this is where the order would be
-           sent to a backend/payment gateway.
-
-        */
-
-
-        document.getElementById(
-            "checkoutContent"
-        ).innerHTML = `
-
-            <div class="success-screen">
-
-                <div class="success-icon">
-                    ✓
-                </div>
-
-                <h2>
-                    Order Confirmed!
-                </h2>
-
-                <p>
-                    Thanks ${name}! Your snack order
-                    has been successfully placed.
-                </p>
-
-
-                <div class="token-box">
-
-                    <span class="token-label">
-                        YOUR PICKUP TOKEN
-                    </span>
-
-                    <div class="token">
-                        ${token}
-                    </div>
-
-                </div>
-
-
-                <div style="
-                    margin-bottom:15px;
-                    font-size:14px;
-                    color:#555;
-                ">
-
-                    <strong>
-                        Payment:
-                    </strong>
-
-                    ${paymentMethod}
-
-                    <br>
-
-                    <strong>
-                        Total:
-                    </strong>
-
-                    ₹${totals.total}
-
-                </div>
-
-
-                <div class="pickup-note">
-
-                    🎟️ Show this token at the
-                    SnackPass counter when collecting
-                    your snacks.
-
-                </div>
-
-
-                <button
-                    class="confirm-btn"
-                    onclick="finishOrder()">
-
-                    Done
-
-                </button>
 
             </div>
 
-        `;
+
+            <div style="
+                margin-bottom:15px;
+                font-size:14px;
+                line-height:1.8;
+            ">
+
+                <strong>Payment:</strong>
+                ${payment.value}
+
+                <br>
+
+                <strong>Total:</strong>
+                ₹${totals.total}
+
+            </div>
+
+
+            <div class="pickup-note">
+
+                🎟️ Show this token at the
+                SnackPass counter when collecting
+                your snacks.
+
+            </div>
+
+
+            <button
+                class="confirm-btn"
+                onclick="finishOrder()">
+
+                Done
+
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================
+   FINISH
+========================= */
+
+function finishOrder(){
+
+    cart=[];
+
+    saveCart();
+
+    updateCart();
+
+    closeCheckout();
+
+    location.reload();
+
+}
+
+
+/* =========================
+   SCROLL CART
+========================= */
+
+function scrollToCart(){
+
+    if(window.innerWidth<=850){
+
+        openCheckout();
+
+        return;
 
     }
 
+    document
+        .getElementById("desktopCart")
+        .scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+        });
 
-    /* =========================================
-       FINISH ORDER
-    ========================================== */
+}
 
-    function finishOrder() {
 
-        cart = [];
+/* =========================
+   OUTSIDE MODAL
+========================= */
 
-        saveCart();
+document
+.getElementById("checkoutModal")
+.addEventListener("click",function(e){
 
-        updateCart();
+    if(e.target===this){
 
         closeCheckout();
 
-
-        /* Reset checkout modal */
-
-        setTimeout(() => {
-
-            location.reload();
-
-        }, 300);
-
     }
 
-
-    /* =========================================
-       SCROLL TO CART
-    ========================================== */
-
-    function scrollToCart() {
-
-        if (window.innerWidth <= 850) {
-
-            openCheckout();
-
-            return;
-
-        }
+});
 
 
-        document
-            .getElementById("desktopCart")
-            .scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-            });
+/* =========================
+   INITIALIZE
+========================= */
 
-    }
-
-
-    /* =========================================
-       CLOSE MODAL WHEN CLICKING OUTSIDE
-    ========================================== */
-
-    document
-        .getElementById("checkoutModal")
-        .addEventListener(
-            "click",
-            function(event) {
-
-                if (
-                    event.target === this
-                ) {
-
-                    closeCheckout();
-
-                }
-
-            }
-        );
-
-
-    /* =========================================
-       INITIAL LOAD
-    ========================================== */
-
-    displayProducts();
-
-    updateCart();
+displayProducts();
+updateCart();
 
 </script>
 
