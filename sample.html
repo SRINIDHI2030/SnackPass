@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="SnackPass - Fast campus snack ordering"
+    >
+
+    <title>SnackPass — Campus Snacks</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="header-inner">
+
+            <a href="#" class="brand">
+
+                <div class="brand-icon">
+                    🍿
+                </div>
+
+                <div>
+                    <h1>SnackPass</h1>
+                    <span>Campus Snacks</span>
+                </div>
+
+            </a>
+
+
+            <div class="canteen-status">
+
+                <span class="status-dot"></span>
+
+                <span>
+                    Canteen Open
+                </span>
+
+            </div>
+
+
+            <button
+                class="mobile-cart-button"
+                id="mobileCartButton"
+                aria-label="Open cart"
+            >
+
+                🛒
+
+                <span
+                    id="mobileCartCount"
+                    class="cart-badge"
+                >
+                    0
+                </span>
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <span class="eyebrow">
+                CAMPUS SNACKS • FAST PICKUP
+            </span>
+
+            <h2>
+                What are you
+                <span>craving?</span>
+            </h2>
+
+            <p>
+                Pick your favourite campus snacks,
+                place your order and skip the queue.
+            </p>
+
+
+            <!-- SEARCH -->
+
+            <div class="search-box">
+
+                <span class="search-icon">
+                    🔍
+                </span>
+
+                <input
+                    type="search"
+                    id="searchInput"
+                    placeholder="Search for samosa, sandwich, coffee..."
+                    autocomplete="off"
+                >
+
+                <button
+                    id="clearSearch"
+                    class="clear-search"
+                    aria-label="Clear search"
+                >
+                    ×
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main-container">
+
+
+        <!-- ================= MENU AREA ================= -->
+
+        <section class="menu-area">
+
+
+            <!-- CATEGORY BAR -->
+
+            <div class="category-wrapper">
+
+                <button
+                    class="category-scroll-btn left"
+                    id="categoryLeft"
+                >
+                    ‹
+                </button>
+
+
+                <div
+                    class="categories"
+                    id="categories"
+                >
+
+                    <button
+                        class="category-btn active"
+                        data-category="All"
+                    >
+                        <span>✨</span>
+                        All
+                    </button>
+
+                    <button
+                        class="category-btn"
+                        data-category="Fried Snacks"
+                    >
+                        <span>🍟</span>
+                        Fried
+                    </button>
+
+                    <button
+                        class="category-btn"
+                        data-category="Bakery"
+                    >
+                        <span>🥐</span>
+                        Bakery
+                    </button>
+
+                    <button
+                        class="category-btn"
+                        data-category="Sandwiches"
+                    >
+                        <span>🥪</span>
+                        Sandwiches
+                    </button>
+
+                    <button
+                        class="category-btn"
+                        data-category="Fast Food"
+                    >
+                        <span>🍕</span>
+                        Fast Food
+                    </button>
+
+                    <button
+                        class="category-btn"
+                        data-category="Healthy"
+                    >
+                        <span>🥗</span>
+                        Healthy
+                    </button>
+
+                    <button
+                        class="category-btn"
+                        data-category="Sweets"
+                    >
+                        <span>🍩</span>
+                        Sweets
+                    </button>
+
+                    <button
+                        class="category-btn"
+                        data-category="Beverages"
+                    >
+                        <span>🥤</span>
+                        Beverages
+                    </button>
+
+                </div>
+
+
+                <button
+                    class="category-scroll-btn right"
+                    id="categoryRight"
+                >
+                    ›
+                </button>
+
+            </div>
+
+
+            <!-- RESULT INFORMATION -->
+
+            <div class="menu-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        TODAY'S MENU
+                    </span>
+
+                    <h3 id="menuTitle">
+                        All Snacks
+                    </h3>
+
+                </div>
+
+                <span
+                    id="resultCount"
+                    class="result-count"
+                >
+                    40 items
+                </span>
+
+            </div>
+
+
+            <!-- MENU GRID -->
+
+            <div
+                class="menu-grid"
+                id="menuGrid"
+            >
+            </div>
+
+
+            <!-- NO RESULTS -->
+
+            <div
+                class="no-results"
+                id="noResults"
+            >
+
+                <div class="no-results-icon">
+                    🔎
+                </div>
+
+                <h3>
+                    No snacks found
+                </h3>
+
+                <p>
+                    Try searching for something else.
+                </p>
+
+                <button
+                    id="resetSearch"
+                    class="reset-btn"
+                >
+                    Show all snacks
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= DESKTOP CART ================= -->
+
+        <aside class="cart-area">
+
+            <div class="cart-card">
+
+
+                <!-- CART HEADER -->
+
+                <div class="cart-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            YOUR ORDER
+                        </span>
+
+                        <h3>
+                            Snack Basket
+                        </h3>
+
+                    </div>
+
+                    <span
+                        id="cartItemCount"
+                        class="cart-item-count"
+                    >
+                        0 items
+                    </span>
+
+                </div>
+
+
+                <!-- CART CONTENT -->
+
+                <div
+                    id="cartItems"
+                    class="cart-items"
+                >
+
+                    <div class="empty-cart">
+
+                        <div class="empty-cart-icon">
+                            🛒
+                        </div>
+
+                        <h4>
+                            Your basket is empty
+                        </h4>
+
+                        <p>
+                            Add some snacks and
+                            they'll appear here.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CART SUMMARY -->
+
+                <div class="cart-summary">
+
+                    <div class="summary-row">
+
+                        <span>
+                            Subtotal
+                        </span>
+
+                        <strong id="subtotal">
+                            ₹0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span>
+                            Service fee
+                        </span>
+
+                        <strong id="serviceFee">
+                            ₹0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-divider"></div>
+
+
+                    <div class="summary-total">
+
+                        <span>
+                            Total
+                        </span>
+
+                        <strong id="total">
+                            ₹0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CHECKOUT -->
+
+                <button
+                    id="checkoutButton"
+                    class="checkout-btn"
+                    disabled
+                >
+
+                    <span>
+                        Proceed to Checkout
+                    </span>
+
+                    <span>
+                        →
+                    </span>
+
+                </button>
+
+
+                <p class="pickup-note">
+                    ⚡ Ready for pickup in approximately
+                    10–15 minutes
+                </p>
+
+            </div>
+
+        </aside>
+
+    </main>
+
+
+    <!-- ================= MOBILE CART BAR ================= -->
+
+    <div
+        class="mobile-cart-bar"
+        id="mobileCartBar"
+    >
+
+        <div class="mobile-cart-info">
+
+            <div class="mobile-cart-icon">
+                🛒
+            </div>
+
+            <div>
+
+                <strong id="mobileBarItems">
+                    0 items
+                </strong>
+
+                <span>
+                    View your basket
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <strong id="mobileBarTotal">
+            ₹0
+        </strong>
+
+        <span class="mobile-cart-arrow">
+            →
+        </span>
+
+    </div>
+
+
+    <!-- ================= CHECKOUT MODAL ================= -->
+
+    <div
+        class="modal"
+        id="checkoutModal"
+    >
+
+        <div class="modal-overlay"></div>
+
+
+        <div class="checkout-modal">
+
+            <button
+                class="modal-close"
+                id="closeCheckout"
+                aria-label="Close checkout"
+            >
+                ×
+            </button>
+
+
+            <div class="modal-header">
+
+                <div class="modal-icon">
+                    🧾
+                </div>
+
+                <div>
+
+                    <span class="section-label">
+                        CHECKOUT
+                    </span>
+
+                    <h2>
+                        Confirm your order
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <!-- CHECKOUT ITEMS -->
+
+            <div
+                id="checkoutItems"
+                class="checkout-items"
+            >
+            </div>
+
+
+            <!-- CHECKOUT TOTAL -->
+
+            <div class="checkout-total">
+
+                <span>
+                    Total to pay
+                </span>
+
+                <strong id="checkoutTotal">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <!-- STUDENT NAME -->
+
+            <div class="input-group">
+
+                <label for="studentName">
+                    Your name
+                </label>
+
+                <input
+                    type="text"
+                    id="studentName"
+                    placeholder="Enter your name"
+                    maxlength="40"
+                >
+
+            </div>
+
+
+            <button
+                id="placeOrderButton"
+                class="place-order-btn"
+            >
+
+                Place Order
+                <span>→</span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= SUCCESS MODAL ================= -->
+
+    <div
+        class="modal"
+        id="successModal"
+    >
+
+        <div class="modal-overlay"></div>
+
+
+        <div class="success-modal">
+
+            <div class="success-animation">
+
+                <div class="success-circle">
+                    ✓
+                </div>
+
+            </div>
+
+
+            <span class="section-label">
+                ORDER CONFIRMED
+            </span>
+
+
+            <h2>
+                You're all set! 🎉
+            </h2>
+
+
+            <p class="success-description">
+                Your snacks are being prepared.
+                Show the token below when you
+                collect your order.
+            </p>
+
+
+            <div class="token-card">
+
+                <span>
+                    YOUR PICKUP TOKEN
+                </span>
+
+                <strong id="orderToken">
+                    SP-00000
+                </strong>
+
+            </div>
+
+
+            <div class="success-details">
+
+                <div>
+                    <span>
+                        Customer
+                    </span>
+
+                    <strong id="customerName">
+                        Student
+                    </strong>
+                </div>
+
+
+                <div>
+                    <span>
+                        Amount
+                    </span>
+
+                    <strong id="successAmount">
+                        ₹0
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="pickup-location">
+
+                📍
+                <span>
+                    Collect from the
+                    <strong>SnackPass Counter</strong>
+                </span>
+
+            </div>
+
+
+            <button
+                id="newOrderButton"
+                class="new-order-btn"
+            >
+                Start New Order
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= TOAST ================= -->
+
+    <div
+        class="toast"
+        id="toast"
+    >
+
+        <span id="toastIcon">
+            ✓
+        </span>
+
+        <span id="toastMessage">
+            Added to basket
+        </span>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
